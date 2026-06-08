@@ -9,6 +9,10 @@ import { useDispatch } from "react-redux";
 import { currentLoggedEmployee } from "../../features/auth/state/auth/authAction";
 import PublicRoute from "../protectedRoutes/PublicRoute";
 import ProtectedRoute from "../protectedRoutes/ProtectedRoute";
+import { commonRoutes } from "./commonRoutes";
+import RoleBaseRoute from "../protectedRoutes/RoleBaseRoute";
+import { adminRoutes } from "./adminRoutes";
+import { employeeRoutes } from "./employeeRoutes";
 
 const AppRoutes = () => {
   let dispatch = useDispatch();
@@ -25,7 +29,7 @@ const AppRoutes = () => {
       element: <PublicRoute />,
       children: [
         {
-          path: "/",
+          path: "",
           element: <AuthLayout />,
           children: [
             {
@@ -49,9 +53,14 @@ const AppRoutes = () => {
           path: "",
           element: <DashboardLayout />,
           children: [
+            ...commonRoutes,
             {
-              path: "",
-              element: <Home />,
+              element: <RoleBaseRoute allowedRoles={"admin"} />,
+              children: adminRoutes,
+            },
+            {
+              element: <RoleBaseRoute allowedRoles={"employee"} />,
+              children: employeeRoutes,
             },
           ],
         },
